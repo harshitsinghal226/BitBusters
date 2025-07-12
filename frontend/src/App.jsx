@@ -3,6 +3,8 @@ import './App.css'
 import UserProfile from './pages/UserProfile.jsx'
 import Screen4Profile from './pages/Screen4Profile.jsx'
 import Screen5RequestModal from './pages/Screen5RequestModal.jsx'
+import Screen2Login from "./pages/screen2";
+import Screen1 from "./pages/screen1";
 
 function App() {
   const [showRequestModal, setShowRequestModal] = useState(false);
