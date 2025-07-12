@@ -39,7 +39,6 @@ export default function Screen1({
               <button onClick={onSwapRequestClick} className="underline underline-offset-4 hover:text-purple-400">Swap request</button>
               <div
                 className="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-400 bg-purple-900 flex items-center justify-center cursor-pointer"
-                onClick={() => onProfilePhotoClick(user)}
                 title="Your Profile"
               >
                 {user?.photo ? <img src={user.photo} alt="Profile" className="object-cover w-full h-full" /> : <span className="text-xl">👤</span>}
@@ -83,8 +82,7 @@ export default function Screen1({
           <div key={u.id} className="flex items-center justify-between bg-black/60 rounded-xl p-4 border border-purple-900 shadow">
             <div className="flex items-center gap-4">
               <div
-                className="w-16 h-16 rounded-full overflow-hidden border-2 border-purple-400 bg-purple-900 flex items-center justify-center cursor-pointer"
-                onClick={() => onProfilePhotoClick(u)}
+                className="w-16 h-16 rounded-full overflow-hidden border-2 border-purple-400 bg-purple-900 flex items-center justify-center"
                 title={u.name}
               >
                 {u.photo ? <img src={u.photo} alt="Profile" className="object-cover w-full h-full" /> : <span className="text-2xl">👤</span>}
