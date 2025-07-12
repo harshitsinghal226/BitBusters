@@ -5,7 +5,7 @@
 The Skill Swap Platform is a mini application designed to facilitate skill exchange among users. It allows individuals to list their skills, request skills from others, and manage swap transactions.
 
 ## Features
-- **Basic Information:**
+- Basic Information:
   - Name
   - Location (optional)
   - Profile photo (optional)
