@@ -6,7 +6,8 @@ import Screen2 from './pages/screen2.jsx';
 import UserProfile from './pages/UserProfile.jsx';
 import Screen4Profile from './pages/Screen4Profile.jsx';
 import Screen5RequestModal from './pages/Screen5RequestModal.jsx';
-import Screen6SwapRequests from './pages/screen6.jsx';
+import Screen6SwapRequests from './pages/Screen6SwapRequests.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
 
 // Dummy users for demo
 const initialDemoUsers = [
@@ -15,7 +16,7 @@ const initialDemoUsers = [
   { id: 3, name: 'Joe Wills', skillsOffered: ['Writing'], skillsWanted: ['Photoshop'], photo: null, feedback: '', profile: 'Public', availability: 'evenings', location: 'London' },
 ];
 
-function AppRoutes({ isLoggedIn, setIsLoggedIn, user, setUser, users, setUsers, swapRequests, setSwapRequests }) {
+function AppRoutes({ isLoggedIn, setIsLoggedIn, user, setUser, users, setUsers, swapRequests, setSwapRequests, adminMessages, setAdminMessages }) {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [modalUser, setModalUser] = useState(null);
   const navigate = useNavigate();
@@ -83,6 +84,43 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn, user, setUser, users, setUsers, 
   // Add navigation for Swap request button
   const handleSwapRequestNav = () => navigate('/swap-requests');
 
+  // Admin: Ban user
+  const handleBanUser = (userId) => {
+    setUsers(users => users.filter(u => u.id !== userId));
+    setSwapRequests(reqs => reqs.filter(r => r.fromUserId !== userId && r.toUserId !== userId));
+  };
+
+  // Admin: Reject skill
+  const handleRejectSkill = (userId, skill) => {
+    setUsers(users => users.map(u =>
+      u.id === userId ? { ...u, skillsOffered: u.skillsOffered.filter(s => s !== skill) } : u
+    ));
+  };
+
+  // Admin: Send platform-wide message
+  const handleSendMessage = (msg) => {
+    setAdminMessages(msgs => [...msgs, msg]);
+  };
+
+  // Admin: Download reports
+  const handleDownloadReport = () => {
+    const data = {
+      users,
+      swaps: swapRequests,
+      messages: adminMessages,
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'skill_swap_report.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Simple admin access: ?admin=1 in URL
+  const isAdmin = new URLSearchParams(location.search).get('admin') === '1';
+
   return (
     <>
       <Routes>
@@ -143,6 +181,22 @@ function AppRoutes({ isLoggedIn, setIsLoggedIn, user, setUser, users, setUsers, 
             />
           }
         />
+        {isAdmin && (
+          <Route
+            path="/admin"
+            element={
+              <AdminDashboard
+                users={users}
+                swaps={swapRequests}
+                onBanUser={handleBanUser}
+                onRejectSkill={handleRejectSkill}
+                onSendMessage={handleSendMessage}
+                onDownloadReport={handleDownloadReport}
+                messages={adminMessages}
+              />
+            }
+          />
+        )}
       </Routes>
       {/* Screen5 Modal */}
       {showRequestModal && (
@@ -164,6 +218,7 @@ function App() {
     // Example request
     // { id, fromUserId, toUserId, offeredSkill, wantedSkill, status }
   ]);
+  const [adminMessages, setAdminMessages] = useState([]);
 
   return (
     <Router>
@@ -176,6 +231,8 @@ function App() {
         setUsers={setUsers}
         swapRequests={swapRequests}
         setSwapRequests={setSwapRequests}
+        adminMessages={adminMessages}
+        setAdminMessages={setAdminMessages}
       />
     </Router>
   );
