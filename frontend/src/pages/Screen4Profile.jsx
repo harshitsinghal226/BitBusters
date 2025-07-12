@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function Screen4Profile({ onRequest }) {
-  // Demo data
-  const skillsOffered = ['Graphic Design', 'Video Editing'];
-  const skillsWanted = ['Python', 'Manager'];
-  const [photo] = useState(null);
+export default function Screen4Profile({ user, onBack, onRequest }) {
+  // Use user prop for dynamic data
+  const skillsOffered = user?.skillsOffered || [];
+  const skillsWanted = user?.skillsWanted || [];
+  const photo = user?.photo || null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1a1333] via-[#2d1a4d] to-black text-white flex flex-col items-center py-10">
@@ -14,7 +14,12 @@ export default function Screen4Profile({ onRequest }) {
           <div className="text-lg font-bold text-purple-200">Skill Swap Platform</div>
           <div className="flex gap-8 items-center">
             <a href="#" className="underline underline-offset-4 hover:text-purple-400">Swap request</a>
-            <a href="#" className="underline underline-offset-4 hover:text-purple-400">Home</a>
+            <button
+              onClick={onBack}
+              className="underline underline-offset-4 hover:text-purple-400"
+            >
+              Back
+            </button>
             <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-purple-400 bg-purple-900 flex items-center justify-center">
               {photo ? (
                 <img src={photo} alt="Profile" className="object-cover w-full h-full" />
@@ -33,7 +38,7 @@ export default function Screen4Profile({ onRequest }) {
             >
               Request
             </button>
-            <div className="text-2xl font-bold text-white mb-2">Marc Demo</div>
+            <div className="text-2xl font-bold text-white mb-2">{user?.name || "No Name"}</div>
             <div>
               <div className="font-bold text-purple-300">Skills Offered</div>
               <div className="flex flex-wrap gap-2 mt-1">
@@ -52,7 +57,9 @@ export default function Screen4Profile({ onRequest }) {
             </div>
             <div className="mt-6">
               <div className="font-bold text-purple-300">Rating and Feedback</div>
-              <div className="text-purple-200 italic mt-1">No feedback yet.</div>
+              <div className="text-purple-200 italic mt-1">
+                {user?.feedback || "No feedback yet."}
+              </div>
             </div>
           </div>
           {/* Profile Photo */}
@@ -70,4 +77,4 @@ export default function Screen4Profile({ onRequest }) {
       </div>
     </div>
   );
-} 
+}
